@@ -6,7 +6,7 @@ A class team project is to control a 2D array of LEDs from a web browser. The LE
 
 ## Technical details
 The LED matrix can be made with any length of individually adressable LED strip. The LEDs should be arranged in a snaking pattern like so:
->|  |--|  |--|  |
->|  |  |  |  |  |
->|  |  |  |  |  |
->|--|  |--|  |--|
+|  |--|  |--|  |
+|  |  |  |  |  |
+|  |  |  |  |  |
+|--|  |--|  |--|
