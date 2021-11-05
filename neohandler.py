@@ -1,28 +1,33 @@
 import neopixel
-import board
 import time
 import random
 
 
-def segment_array(linear_array, col_count):
-    matrix_array = []
-    pos = 0
-    col_height = linear_array / col_count
+class NeoHandler(neopixel.NeoPixel):
 
-    for i in range(col_count):
-        matrix_array.append(linear_array[pos:pos+col_height])
-        pos += col_height
+    def __init__(self, pixel_pin, num_pixels, brightness, auto_write, pixel_order):
+        self.neopixel = neopixel.NeoPixel.__init__(pixel_pin, num_pixels, brightness, auto_write, pixel_order)
 
-    return matrix_array
 
-test_vols = [1, 2, 3, 2, 1, 0, 2, 4, 6, 8, 6, 4, 3, 2, 1, 0, 1, 5, 10, 15]
-def display_volumes(neo_array, freq_vols = test_vols):
-    col_height = int(len(neo_array)/len(freq_vols))
+    def segment_array(linear_array, col_count):
+        matrix_array = []
+        pos = 0
+        col_height = linear_array / col_count
 
-    for x in range(len(freq_vols)):
-        for y in range(freq_vols[x]):
-            neo_array[x*col_height + y] = (255, 55, 200)
-    neo_array.show()
+        for i in range(col_count):
+            matrix_array.append(linear_array[pos:pos+col_height])
+            pos += col_height
+
+        return matrix_array
+
+    test_vols = [1, 2, 3, 2, 1, 0, 2, 4, 6, 8, 6, 4, 3, 2, 1, 0, 1, 5, 10, 15]
+    def display_volumes(self, freq_vols = test_vols):
+        col_height = int(self.num_pixel/len(freq_vols))
+
+        for x in range(len(freq_vols)):
+            for y in range(freq_vols[x]):
+                self.neopixel[x*col_height + y] = (255, 55, 200)
+        self.neopixel.show()
 
 
 def rand_color():

@@ -62,32 +62,33 @@ if __name__ == '__main__':
         while True:
 
             MatrixHandler.display_volumes(pixels)
+            time.sleep(10)
 
-            # for i in range(num_pixels):
-            #     pixels[i] = (rand_color())
-            #     # pixels.show()
-            #     pixels[(i-1 if i-1 > -1 else 0)] = (0, 0, 0)
-            #     pixels.show()
+            for i in range(num_pixels):
+                pixels[i] = (rand_color())
+                # pixels.show()
+                pixels[(i-1 if i-1 > -1 else 0)] = (0, 0, 0)
+                pixels.show()
 
-            # for i in range(num_pixels-1, -1, -1):
-            #     pixels[i] = (rand_color())
-            #     # pixels.show()
-            #     pixels[(i+1 if i+1 < num_pixels else 0)] = (0, 0, 0)
-            #     pixels.show()
+            for i in range(num_pixels-1, -1, -1):
+                pixels[i] = (rand_color())
+                # pixels.show()
+                pixels[(i+1 if i+1 < num_pixels else 0)] = (0, 0, 0)
+                pixels.show()
 
-            # pixels.fill((255, 0, 0))
-            # pixels.show()
-            # time.sleep(1)
+            pixels.fill((255, 0, 0))
+            pixels.show()
+            time.sleep(1)
 
-            # pixels.fill((0, 255, 0))
-            # pixels.show()
-            # time.sleep(1)
+            pixels.fill((0, 255, 0))
+            pixels.show()
+            time.sleep(1)
 
-            # pixels.fill((0, 0, 255))
-            # pixels.show()
-            # time.sleep(1)
+            pixels.fill((0, 0, 255))
+            pixels.show()
+            time.sleep(1)
 
-            # rainbow_cycle(0.001)  # rainbow cycle with 1ms delay per step
+            rainbow_cycle(0.001)  # rainbow cycle with 1ms delay per step
     
     except KeyboardInterrupt:
         print(" accepted")
