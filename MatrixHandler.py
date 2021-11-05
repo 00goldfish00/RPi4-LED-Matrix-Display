@@ -17,11 +17,11 @@ def segment_array(linear_array, col_count):
 
 test_vols = [1, 2, 3, 2, 1, 0, 2, 4, 6, 8, 6, 4, 3, 2, 1, 0, 1, 5, 10, 15]
 def display_volumes(neo_array, freq_vols = test_vols):
-    col_height = len(neo_array)/len(freq_vols)
+    col_height = int(len(neo_array)/len(freq_vols))
 
     for x in range(len(freq_vols)):
         for y in range(freq_vols[x]):
-            neo_array[int((x*col_height)+y)] = (255, 225, 55)
+            neo_array[x*col_height + y] = (255, 55, 200)
     neo_array.show()
 
 
