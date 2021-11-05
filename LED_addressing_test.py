@@ -1,6 +1,11 @@
-import neopixel
-import board
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 import time
+import board
+import neopixel
+import random
+
 
 def wheel(pos):
     # Input a value 0 to 255 to get a color value.
@@ -32,30 +37,64 @@ def rainbow_cycle(wait):
         pixels.show()
         time.sleep(wait)
 
-if  __name__ == '__main__':
 
-    # Choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D18
-    # NeoPixels must be connected to D10, D12, D18 or D21 to work.
+if __name__ == '__main__':
+
+    # On a Raspberry pi, use this instead, not all pins are supported
     pixel_pin = board.D18
 
     # The number of NeoPixels
     num_pixels = 300
 
-    # The order of the pixel colors - RGB or GRB
+    # The order of the pixel colors - RGB or GRB. Some NeoPixels have red and green reversed!
     ORDER = neopixel.GRB
 
-    pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=1, auto_write=False, pixel_order=ORDER)
+    pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.25, auto_write=False, pixel_order=ORDER)
 
-    pixels.fill((255, 0, 0))
-    pixels.show()
-    time.sleep(1)
+    random.seed(69)
 
-    pixels.fill((0, 255, 0))
-    pixels.show()
-    time.sleep(1)
+    try:
+        while True:
 
-    pixels.fill((0, 0, 255))
-    pixels.show()
-    time.sleep(1)
+            r = random.randrange(0, 255)
+            g = random.randrange(0, 255)
+            b = random.randrange(0, 255)
+            print('RGB: ', r, g, b)
 
-    rainbow_cycle(0.001)  # rainbow cycle with 1ms delay per step
+            for i in range(num_pixels):
+                pixels[i] = (r, g, b)
+                # pixels.show()
+                pixels[(i-1 if i-1 > -1 else 0)] = (0, 0, 0)
+                pixels.show()
+
+            r = random.randrange(0, 255)
+            g = random.randrange(0, 255)
+            b = random.randrange(0, 255)
+            print('RGB: ', r, g, b)
+
+            for i in range(num_pixels-1, -1, -1):
+                pixels[i] = (r, g, b)
+                # pixels.show()
+                pixels[(i+1 if i+1 < num_pixels else 0)] = (0, 0, 0)
+                pixels.show()
+
+            pixels.fill((255, 0, 0))
+            pixels.show()
+            time.sleep(1)
+
+            pixels.fill((0, 255, 0))
+            pixels.show()
+            time.sleep(1)
+
+            pixels.fill((0, 0, 255))
+            pixels.show()
+            time.sleep(1)
+
+            rainbow_cycle(0.001)  # rainbow cycle with 1ms delay per step
+    
+    except KeyboardInterrupt:
+        print(" accepted")
+        print("Turning off LED strip")
+        pixels.fill((0, 0, 0))
+        pixels.show()
+        print("Exiting program")
