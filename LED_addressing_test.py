@@ -38,6 +38,10 @@ def rainbow_cycle(wait):
         time.sleep(wait)
 
 
+def rand_color():
+    return random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)
+
+
 if __name__ == '__main__':
 
     # On a Raspberry pi, use this instead, not all pins are supported
@@ -56,24 +60,14 @@ if __name__ == '__main__':
     try:
         while True:
 
-            r = random.randrange(0, 255)
-            g = random.randrange(0, 255)
-            b = random.randrange(0, 255)
-            print('RGB: ', r, g, b)
-
             for i in range(num_pixels):
-                pixels[i] = (r, g, b)
+                pixels[i] = (rand_color())
                 # pixels.show()
                 pixels[(i-1 if i-1 > -1 else 0)] = (0, 0, 0)
                 pixels.show()
 
-            r = random.randrange(0, 255)
-            g = random.randrange(0, 255)
-            b = random.randrange(0, 255)
-            print('RGB: ', r, g, b)
-
             for i in range(num_pixels-1, -1, -1):
-                pixels[i] = (r, g, b)
+                pixels[i] = (rand_color())
                 # pixels.show()
                 pixels[(i+1 if i+1 < num_pixels else 0)] = (0, 0, 0)
                 pixels.show()
