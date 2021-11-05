@@ -1,42 +1,8 @@
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
-# SPDX-License-Identifier: MIT
-
 import time
 import board
 import neopixel
 import random
-import MatrixHandler
-
-
-def wheel(pos):
-    # Input a value 0 to 255 to get a color value.
-    # The colours are a transition r - g - b - back to r.
-    if pos < 0 or pos > 255:
-        r = g = b = 0
-    elif pos < 85:
-        r = int(pos * 3)
-        g = int(255 - pos * 3)
-        b = 0
-    elif pos < 170:
-        pos -= 85
-        r = int(255 - pos * 3)
-        g = 0
-        b = int(pos * 3)
-    else:
-        pos -= 170
-        r = 0
-        g = int(pos * 3)
-        b = int(255 - pos * 3)
-    return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
-
-
-def rainbow_cycle(wait):
-    for j in range(255):
-        for i in range(num_pixels):
-            pixel_index = (i * 256 // num_pixels) + j
-            pixels[i] = wheel(pixel_index & 255)
-        pixels.show()
-        time.sleep(wait)
+from neohandler import NeoHandler
 
 
 def rand_color():
@@ -45,54 +11,52 @@ def rand_color():
 
 if __name__ == '__main__':
 
-    # On a Raspberry pi, use this instead, not all pins are supported
-    pixel_pin = board.D18
+    # the number of NeoPixels
+    pixel_count = 300
 
-    # The number of NeoPixels
-    num_pixels = 300
-
-    # The order of the pixel colors - RGB or GRB. Some NeoPixels have red and green reversed!
+    # order of the color signal
     ORDER = neopixel.GRB
 
-    pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.25, auto_write=False, pixel_order=ORDER)
-
     random.seed(69)
+
+    # create pixel handler object for led strip
+    ph = NeoHandler(pixel_pin=board.D18, num_pixels=pixel_count, brightness=0.25, auto_write=False, pixel_order=ORDER)
 
     try:
         while True:
 
-            MatrixHandler.display_volumes(pixels)
-            time.sleep(10)
+            ph.rainbow_cycle(0.005)  # rainbow cycle with 1ms delay per step
 
-            for i in range(num_pixels):
-                pixels[i] = (rand_color())
-                # pixels.show()
-                pixels[(i-1 if i-1 > -1 else 0)] = (0, 0, 0)
-                pixels.show()
+            ph.display_volumes()
+            # time.sleep(5)
 
-            for i in range(num_pixels-1, -1, -1):
-                pixels[i] = (rand_color())
-                # pixels.show()
-                pixels[(i+1 if i+1 < num_pixels else 0)] = (0, 0, 0)
-                pixels.show()
+            # for i in range(pixel_count):
+            #     ph[i] = (rand_color())
+            #     # pixels.show()
+            #     ph[(i-1 if i-1 > -1 else 0)] = (0, 0, 0)
+            #     ph.show()
 
-            pixels.fill((255, 0, 0))
-            pixels.show()
-            time.sleep(1)
+            # for i in range(pixel_count-1, -1, -1):
+            #     ph[i] = (rand_color())
+            #     # pixels.show()
+            #     ph[(i+1 if i+1 < pixel_count else 0)] = (0, 0, 0)
+            #     ph.show()
 
-            pixels.fill((0, 255, 0))
-            pixels.show()
-            time.sleep(1)
+            # ph.fill((255, 0, 0))
+            # ph.show()
+            # time.sleep(1)
 
-            pixels.fill((0, 0, 255))
-            pixels.show()
-            time.sleep(1)
+            # ph.fill((0, 255, 0))
+            # ph.show()
+            # time.sleep(1)
 
-            rainbow_cycle(0.001)  # rainbow cycle with 1ms delay per step
-    
+            # ph.fill((0, 0, 255))
+            # ph.show()
+            # time.sleep(1)
+
     except KeyboardInterrupt:
         print(" accepted")
         print("Turning off LED strip")
-        pixels.fill((0, 0, 0))
-        pixels.show()
+        ph.fill((0, 0, 0))
+        ph.show()
         print("Exiting program")
