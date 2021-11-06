@@ -9,6 +9,7 @@ class NeoHandler(neopixel.NeoPixel):
     def __init__(self, pixel_pin, num_pixels, brightness, auto_write, pixel_order):
         super().__init__(pixel_pin, num_pixels, brightness=brightness, auto_write=auto_write, pixel_order=pixel_order)
         self.num_pixels = num_pixels
+        self.pixel_order = pixel_order
 
 
     def segment_array(linear_array, col_count):
@@ -65,7 +66,7 @@ class NeoHandler(neopixel.NeoPixel):
             r = 0
             g = int(pos * 3)
             b = int(255 - pos * 3)
-        return (r, g, b) if self.ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
+        return (r, g, b) if self.pixel_order in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
     def rainbow_cycle(self, wait):
