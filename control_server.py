@@ -56,20 +56,11 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
                 
                 # create HTML code with updated slider and status variable to be sent back to web page
                 body = ('<form action="/send_color" method="post">\n'
-                                f'<input type="range" name="r_range" min="0" max="100" value="{r_val}" />\n'
-                                '<label>Red</label><br>\n'
-                                f'<input type="range" name="g_range" min="0" max="100" value="{g_val}" />\n'
-                                '<label>Green</label><br>\n'
-                                f'<input type="range" name="b_range" min="0" max="100" value="{b_val}" />\n'
-                                '<label>Blue</label><br>\n'
+                                f'<input type="color" name="color_picker" min="0" max="100" value="{r_val}" /><br>\n'
                                 '<input type="submit" name="color" value="Send Color" />\n'
                             '</form>\n'
                             '<form action="/send_toggle" method="post">\n'
-                                '<input type="submit" name="toggle" value="TOGGLE LED" />\n'
-                            '</form>\n'
-                            f'<p>LED is {"OFF" if led_state else "ON"}</p>\n'
-                            '<form action="/" method="post">\n'
-                                '<input type="submit" value="Update Page" />\n'
+                                f'<input type="submit" name="toggle" value="{"Turn Display ON" if led_state else "Turn Display OFF"}" />\n'
                             '</form>\n'
                             '</body>\n'
                             '</html>')
