@@ -76,3 +76,31 @@ class NeoHandler(neopixel.NeoPixel):
                 self[i] = self.wheel(pixel_index & 255)
             self.show()
             time.sleep(wait)
+    
+
+    def bounce(self, color = (rand_color())):
+        for i in range(self.num_pixels):
+            self[i] = color
+            # pixels.show()
+            self[(i-1 if i-1 > -1 else 0)] = (0, 0, 0)
+            self.show()
+
+        for i in range(self.num_pixels-1, -1, -1):
+            self[i] = color
+            # pixels.show()
+            self[(i+1 if i+1 < self.num_pixels else 0)] = (0, 0, 0)
+            self.show()
+
+
+    def rgb_cycle(self, wait):
+        self.fill((255, 0, 0))
+        self.show()
+        time.sleep(wait)
+
+        self.fill((0, 255, 0))
+        self.show()
+        time.sleep(wait)
+
+        self.fill((0, 0, 255))
+        self.show()
+        time.sleep(wait)
