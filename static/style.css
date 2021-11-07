@@ -1,0 +1,22 @@
+.form-control#red1 {
+    background-color: var(--bs-red);
+}
+
+.form-control#green1 {
+    background-color: var(--bs-green);
+}
+
+.form-control#blue1 {
+    background-color: var(--bs-blue);
+}
+
+/* For some reason multiple selecters dont work on these sudo elements? */
+.form-range::-webkit-slider-thumb {
+    background-color: var(--bs-gray-dark);
+}
+.form-range::-moz-range-thumb {
+    background-color: var(--bs-gray-dark);
+}
+.form-range::-ms-thumb {
+    background-color: var(--bs-gray-dark);
+}
