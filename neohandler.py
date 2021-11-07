@@ -25,7 +25,7 @@ class NeoHandler(neopixel.NeoPixel):
         return matrix_array
 
 
-    def display_volumes(self, freq_vols = [1, 2, 3, 2, 1, 0, 2, 4, 6, 8, 6, 4, 3, 2, 1, 0, 1, 5, 10, 15]):
+    def display_volumes(self, freq_vols = [10, 5, 1, 5, 15, 0, 2, 4, 6, 8, 6, 4, 3, 2, 1, 0, 1, 5, 10, 15]):
         '''displays the volume level of each given frequency on a linear array'''
 
         # the number of LEDs in one column

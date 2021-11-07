@@ -12,7 +12,7 @@ if __name__ == '__main__':
     try:
         while True:
 
-            ph.rainbow_cycle(0.001) # rainbow cycle with 1ms delay per step
+            ph.rainbow_cycle(0.01) # rainbow cycle with 1ms delay per step
 
             # ph.display_volumes()  # dispaly test frequency volume set
 
