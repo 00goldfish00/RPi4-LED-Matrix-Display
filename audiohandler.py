@@ -1,70 +1,95 @@
-from scipy.io import wavfile    
+from scipy.io import wavfile
 from scipy.fftpack import fft, fftfreq
 import numpy as np
-import math
 import matplotlib.pyplot as plt
-import pyaudio
-
-plt.close('all')
-
-# pa = pyaudio.PyAudio()
-# audio_stream = pa.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, output=True, frames_per_buffer=1024)
-
-samplerate, data = wavfile.read("Marshmello Alone.wav", mmap=False)
-song_data = np.array(data[:4500000])
-print("number of data points = ", len(song_data))
-print("song_data shape:", song_data.shape)
-print("samplerate = ", samplerate)
-length_of_song = np.size(song_data) / samplerate
-print (f"length of song = {length_of_song} seconds")
-
-time_axis = np.linspace(0, length_of_song, len(song_data))
-print("time_axis shape:", time_axis.shape)
+import math
+from neohandler import NeoHandler
+import board
 
 
-freq_range = np.linspace(0.0, len(song_data)/44100, len(song_data))
-freq_range_fft = fftfreq(len(song_data), 1/44100)[:len(song_data)//2]
-print("freq_range shape:", freq_range.shape)
 
-song_data_fft = fft(song_data)
-print("song_data_fft shape:", song_data_fft.shape)
-# data_snip_mag = abs(song_data_fft[0:np.size(freq_range)])
-# print("data_snip_mag shape:", data_snip_mag.shape)
+# data sample step
+second_to_transform = 100
 
-plt.subplot(2, 1, 1)
-plt.plot(time_axis, song_data)
-# plt.xlabel("Time [s]")
-# plt.ylabel("Amplitude")
-plt.title('Song Data')
+# 
+start_point = second_to_transform
+print('start point:', start_point, type(start_point))
 
-plt.subplot(2, 1, 2)
-plt.plot(freq_range_fft, (2/len(song_data) * np.abs(song_data_fft[0:len(song_data)//2])))
-plt.title('Fast Fourier Transform of Song Snippet')
+# time length of collected data
+stop_point = second_to_transform+1
+print('stop point:', stop_point, type(stop_point))
 
-plt.savefig("Song Fourier")
+# x-axis is frequency
+x = np.linspace(start_point, stop_point, N, endpoint=False)
+# fft of frequency range
+xf = fftfreq(N, T)[:N//22]
 
-# Code to generate a sine wave
-# data_points = 100000
-# time = np.arange(0, 0.005, 1/data_points)
-# freq = 5000
+# y-axis input sinewaves
+y = song_data[start_point*N:stop_point*N]
+# fft of input signal
+yf = fft(y)
+#y-axis of the fourier tranform graph 
+magnitude = 2.0/N * np.abs(yf[0:N//22])
 
-# sine = np.sin(2*math.pi*freq*time)
+class AudioHandler:
+    ''''''
 
-# n = np.size(time)
-# fr = (data_points/5) * np.linspace(0, 1, int(n/5))
+    def __init__(self, song_title) -> None:
+        # read in song waveform data
+        samplerate, data = wavfile.read(song_title, mmap=False)
 
-# X = fft(sine)   # Take the Fourier Transform
-# X_mag = abs(X[0:np.size(fr)])
+        # convert to numpy array
+        song_data = np.array(data[:])
+        print('number of data points in song:', len(song_data))
 
-# plt.subplot(2, 1, 1)
-# plt.plot(time, sine)
-# plt.title('Sinusodial Signal')
-# plt.xlabel('Time (s)')
-# plt.ylabel('Amplitude')
+        # length of song in seconds
+        length_of_song = np.size(song_data) / samplerate
+        print('length of song in seconds:', length_of_song)
 
+        # Number of data points to sample for transform
+        N = samplerate
+        
+        # spacing between data points (song sample rate in denominator)
+        T = 1.0 / samplerate
+    
 
-# class AudioHandler():
-#     ''''''
+    # plot
+    def plot_fft(self, xf, yf, xt = [], yt = [], name = 'Fourier Plot'):
+        if xt.any() == True and yt.any() == True:
+            plt.subplot(2, 1, 1)
+            plt.plot(xt, yt)
+            plt.title('sine input over time')
 
-#     def __init__(self) -> None:
-#         pass
+            plt.subplot(2, 1, 2)
+            plt.plot(xf, magnitude)
+            plt.title('fft of sine over frequency range')
+        else:
+            plt.plot(xf, magnitude)
+            plt.grid()
+            plt.title('fft of sine over frequency range')
+
+        plt.savefig(name)
+
+# ah = AudioHandler()
+# ah.plot_fft(xf, yf, x, y, 'FFT of Song Data')
+
+channel = list()
+channel_volume = list()
+for i in range(10):
+    channel.append(max(magnitude[i*50:(i+1)*50])) 
+    #print("Channel ",(i+1)," max (", i*50, ":", (i+1)*50, ") is: ", channel[i])
+    channel_volume.append(int(max(magnitude[i*50:(i+1)*50])/400))
+    print("channel vol: ", channel_volume[i])
+for x in range(5):
+    channel.append(max(magnitude[500+x*100:500+(x+1)*100])) 
+    #print("Channel ",(x+11)," max (", 500+x*100, ":", 500+(x+1)*100, ") is: ", channel[x])
+    channel_volume.append(int(max(magnitude[500+x*100:500+(x+1)*100])/400))
+    print("channel vol: ", channel_volume[x])
+for n in range(5):
+    channel.append(max(magnitude[1000+n*200:1000+(n+1)*200])) 
+    #print("Channel ",(n+16)," max (", 1000+n*200, ":", 1000+(n+1)*200, ") is: ", channel[n])
+    channel_volume.append(int(max(magnitude[1000+n*200:1000+(n+1)*200])/400))
+    #rint("channel vol: ", channel_volume[n])
+
+ph = NeoHandler(pixel_pin=board.D18, num_pixels=300, brightness=0.1, auto_write=False, pixel_order="GRB")
+ph.display_volumes(freq_vols=channel_volume, keep=True)

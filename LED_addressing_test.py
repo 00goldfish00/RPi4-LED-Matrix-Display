@@ -2,6 +2,7 @@ import time
 import board
 import neopixel
 from neohandler import NeoHandler
+import random
 
 
 if __name__ == '__main__':
@@ -12,9 +13,14 @@ if __name__ == '__main__':
     try:
         while True:
 
-            ph.rainbow_cycle(0.01) # rainbow cycle with 1ms delay per step
+            # ph.rainbow_cycle(0.01) # rainbow cycle with 1ms delay per step
 
-            # ph.display_volumes()  # dispaly test frequency volume set
+            volumes = []
+
+            for i in range(20):
+                volumes.append(random.randint(0, 15))
+            
+            ph.display_volumes(volumes, wait=0.5)  # dispaly test frequency volume set
 
     except KeyboardInterrupt:
         print(" accepted")
