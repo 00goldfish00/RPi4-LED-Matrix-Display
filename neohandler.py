@@ -1,48 +1,42 @@
 import neopixel
 import time
 import random
+import math
 
 
 class NeoHandler(neopixel.NeoPixel):
     '''NeoHandler is a child of the NeoPixel class'''
 
-    def __init__(self, pixel_pin, num_pixels, brightness, auto_write, pixel_order):
+    def __init__(self, pixel_pin, num_pixels, pixels_per_column, brightness, auto_write, pixel_order):
         super().__init__(pixel_pin, num_pixels, brightness=brightness, auto_write=auto_write, pixel_order=pixel_order)
         self.num_pixels = num_pixels
+        self.pixels_per_column = pixels_per_column
         self.pixel_order = pixel_order
 
 
-    def segment_array(linear_array, col_count):
-        '''converts a one dimentional array into a 2D matrix based on the desired number of columns'''
-        matrix_array = []
-        pos = 0
-        col_height = linear_array / col_count
-
-        for i in range(col_count):
-            matrix_array.append(linear_array[pos:pos+col_height])
-            pos += col_height
-
-        return matrix_array
-
-
-    def display_volumes(self, freq_vols = [10, 5, 1, 5, 15, 0, 2, 4, 6, 8, 6, 4, 3, 2, 1, 0, 1, 5, 10, 15], wait = 0.01, keep = False):
-        '''displays the volume level of each given frequency on a linear array'''
-
-        # the number of LEDs in one column
-        col_height = int(self.num_pixels/len(freq_vols))
+    def display_volumes(self, freq_vols, wait = 0.1, keep = False):
+        '''displays the volume level of each given frequency on an alternating matrix'''
 
         # for each whole column given by the number of frequencies
         for x in range(len(freq_vols)):
-            # for the volume level from each frequency
-            for y in range(freq_vols[x]):
+            # for the volume level of each frequency range
+            for y_add in range(freq_vols[x]):
                 # add colored LEDs up to the set volume level
-                self[(x*col_height + y)] = (255, 16, 225)
-        
+                if x % 2 == 0:
+                    self[x*self.pixels_per_column + y_add] = (255, 0, 225)
+                else:
+                    self[(x+1)*self.pixels_per_column-1 - y_add] = (0, 255, 225)
+            
+            for y_sub in range(self.pixels_per_column - freq_vols[x]):
+                # remove colored LEDs down to the set volume level
+                if x % 2 == 0:
+                    self[(x+1)*self.pixels_per_column-1 - y_sub] = (0, 0, 0)
+                else:
+                    self[x*self.pixels_per_column + y_sub] = (0, 0, 0)
+
         # update LED strip
         self.show()
         time.sleep(wait)
-        if not keep:
-            self.fill((0, 0, 0))
 
 
     def rand_color():
