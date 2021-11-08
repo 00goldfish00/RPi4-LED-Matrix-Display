@@ -36,7 +36,7 @@ class NeoHandler(neopixel.NeoPixel):
             # for the volume level from each frequency
             for y in range(freq_vols[x]):
                 # add colored LEDs up to the set volume level
-                self[(x*col_height + y)] = (255, 55, 200)
+                self[(x*col_height + y)] = (255, 16, 225)
         
         # update LED strip
         self.show()
