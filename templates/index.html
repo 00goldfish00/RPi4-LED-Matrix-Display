@@ -27,16 +27,16 @@
                 <form class="container-fluid justify-content-start">
                     <script>
                         // Uncomment for audio playback
-                        // const audio = new Audio("{{ url_for('static',filename='audio/Marshmello Alone.wav') }}");
+                        const audio = new Audio("{{ url_for('static',filename='audio/Marshmello Alone.wav') }}");
                         function play(e) {
-                            // if (audio.paused) {
-                            //     audio.play();
-                            //     e.innerHTML = "Pause";
-                            //     e.style
-                            // } else {
-                            //     audio.pause();
-                            //     e.innerHTML = "Play";
-                            // }
+                            if (audio.paused) {
+                                audio.play();
+                                e.innerHTML = "Pause";
+                                e.style
+                            } else {
+                                audio.pause();
+                                e.innerHTML = "Play";
+                            }
                         }
                     </script>
                     <button class="btn btn-success me-2" type="button" id="playBtn" onclick="play(this)">Play</button>
@@ -44,11 +44,11 @@
                         function resetAndStop(e) {
                             // audio.pause();
                             // audio.currentTime = 0;
-                            // document.getElementById('playBtn').innerHTML = "Play";
-                            // document.getElementById('red1').value = "0";
-                            // document.getElementById('green1').value = "0";
-                            // document.getElementById('blue1').value = "0";
-                            // changeAll();
+                            document.getElementById('playBtn').innerHTML = "Play";
+                            document.getElementById('red1').value = "0";
+                            document.getElementById('green1').value = "0";
+                            document.getElementById('blue1').value = "0";
+                            changeAll();
                         }
                     </script>
                     <button class="btn btn-sm btn-secondary" type="button" onclick="resetAndStop(this)">Reset</button>
