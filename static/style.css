@@ -26,3 +26,7 @@ body {
 .form-range::-ms-thumb {
     background-color: var(--bs-gray-dark);
 }
+
+body {
+    background-color: var(--bs-gray-dark);
+}

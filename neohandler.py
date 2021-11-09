@@ -2,6 +2,7 @@ import neopixel
 import time
 import random
 import math
+import numpy as np
 
 
 class NeoHandler(neopixel.NeoPixel):
@@ -9,39 +10,86 @@ class NeoHandler(neopixel.NeoPixel):
 
     def __init__(self, pixel_pin, num_pixels, pixels_per_column, brightness, auto_write, pixel_order):
         super().__init__(pixel_pin, num_pixels, brightness=brightness, auto_write=auto_write, pixel_order=pixel_order)
+        
         self.num_pixels = num_pixels
-        self.pixels_per_column = pixels_per_column
+
+        self.broken_matrix = np.zeros(1, dtype=int)
+        if type(pixels_per_column) is not int:
+            self.broken_matrix = pixels_per_column
+        elif type(pixels_per_column) is int:
+            self.broken_matrix = np.full((num_pixels // pixels_per_column), pixels_per_column, dtype=int)
+        
+        self.columns = math.ceil(num_pixels // max(pixels_per_column))
+        self.px_per_col = max(pixels_per_column)
+        
         self.pixel_order = pixel_order
 
 
-    def display_volumes(self, freq_vols, wait = 0.1, keep = False):
+    def display_volumes(self, col_vols, color1, color2=None, wait = 0.1, keep = False):
         '''displays the volume level of each given frequency on an alternating matrix'''
+        if color2 == None:
+            color2 = color1
 
         # for each whole column given by the number of frequencies
-        for x in range(len(freq_vols)):
-            # for the volume level of each frequency range
-            for y_add in range(freq_vols[x]):
-                # add colored LEDs up to the set volume level
-                if x % 2 == 0:
-                    self[x*self.pixels_per_column + y_add] = (255, 0, 225)
-                else:
-                    self[(x+1)*self.pixels_per_column-1 - y_add] = (0, 255, 225)
+        for col in range(self.columns):
+            # if given volume is greater than current column height
+            if col_vols[col] > self.broken_matrix[col]:
+                # clip volume to column height
+                volume = self.broken_matrix[col]
+            else:
+                # otherwise continue with given volume
+                volume = col_vols[col]
             
-            for y_sub in range(self.pixels_per_column - freq_vols[x]):
-                # remove colored LEDs down to the set volume level
-                if x % 2 == 0:
-                    self[(x+1)*self.pixels_per_column-1 - y_sub] = (0, 0, 0)
-                else:
-                    self[x*self.pixels_per_column + y_sub] = (0, 0, 0)
+            offset = self.px_per_col - self.broken_matrix[col]
+
+            if offset == 0:
+
+                # for the volume level of each frequency range
+                for vol_add in range(volume):
+                    # add colored LEDs up to the set volume level
+                    if col % 2 == 0:
+                        self[col*self.px_per_col + vol_add] = color1
+                    else:
+                        self[(col+1)*self.px_per_col-1 - vol_add] = color2
+                
+                for vol_sub in range(self.px_per_col - volume):
+                    # remove colored LEDs down to the set volume level
+                    if col % 2 == 0:
+                        self[(col+1)*self.px_per_col-1 - vol_sub] = (0, 0, 0)
+                    else:
+                        self[col*self.px_per_col + vol_sub] = (0, 0, 0)
+            
+            else:
+
+                # for the volume level of each frequency range
+                for vol_add in range(volume):
+                    # add colored LEDs up to the set volume level
+                    if col % 2 == 0:
+                        self[col*self.px_per_col + vol_add] = color1
+                    else:
+                        self[(col+1)*self.px_per_col-1 - offset - vol_add] = color2
+                
+                for vol_sub in range(self.px_per_col - volume - offset):
+                    # remove colored LEDs down to the set volume level
+                    if col % 2 == 0:
+                        self[(col+1)*self.px_per_col-1 - offset - vol_add] = (0, 0, 0)
+                    else:
+                        self[col*self.px_per_col + vol_add] = (0, 0, 0)
+
 
         # update LED strip
         self.show()
         time.sleep(wait)
 
 
-    def rand_color():
+    def rand_color(self):
         '''generates a random 3 tuple of RGB values'''
         return random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)
+    
+
+    def solid(self, r, g, b):
+        self.fill((r, g, b))
+        self.show()
 
 
     def wheel(self, pos):
@@ -66,7 +114,7 @@ class NeoHandler(neopixel.NeoPixel):
         return (r, g, b) if self.pixel_order in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
-    def rainbow_cycle(self, wait):
+    def rainbow_cycle(self, wait=0.01):
         for j in range(255):
             for i in range(self.num_pixels):
                 pixel_index = (i * 256 // self.num_pixels) + j
@@ -75,7 +123,10 @@ class NeoHandler(neopixel.NeoPixel):
             time.sleep(wait)
     
 
-    def bounce(self, color = (rand_color())):
+    def bounce(self, color = None):
+        if color == None:
+            color = (self.rand_color())
+        
         for i in range(self.num_pixels):
             self[i] = color
             # pixels.show()
@@ -89,7 +140,7 @@ class NeoHandler(neopixel.NeoPixel):
             self.show()
 
 
-    def rgb_cycle(self, wait):
+    def rgb_cycle(self, wait=1):
         self.fill((255, 0, 0))
         self.show()
         time.sleep(wait)

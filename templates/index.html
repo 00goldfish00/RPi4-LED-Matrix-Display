@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>RGB Control</title>
     <link rel='shortcut icon' type='image/x-icon' href="{{ url_for('static',filename='favicon.png') }}" />
 
@@ -25,7 +24,7 @@
         <div class="row g-2">
             <nav class="navbar navbar-expand-md navbar-light navbar-dark shadow">
                 <form class="container-fluid justify-content-start">
-                    <script>
+                    <!-- <script>
                         // Uncomment for audio playback
                         const audio = new Audio("{{ url_for('static',filename='audio/Marshmello Alone.wav') }}");
                         function play(e) {
@@ -51,7 +50,7 @@
                             changeAll();
                         }
                     </script>
-                    <button class="btn btn-sm btn-secondary" type="button" onclick="resetAndStop(this)">Reset</button>
+                    <button class="btn btn-sm btn-secondary" type="button" onclick="resetAndStop(this)">Reset</button> -->
                 </form>
             </nav>
         </div>
@@ -113,17 +112,17 @@
             </div>
             <!-- Right Column -->
             <div class="col-lg-3 pt-2">
-                <div class="card">
+                <!-- <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Card title</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of
                             the card's content.</p>
-                        <a href="{{ url_for('about') }}" class="card-link">About us</a>
+                         <a href="{{ url_for('about') }}" class="card-link">About us</a> 
                         <a href="https://github.com/00goldfish00/RPi4-LED-Matrix-Display" class="card-link">Code on
                             Github </a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
