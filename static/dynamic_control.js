@@ -1,42 +1,52 @@
 /**
  *  A bunch of functions that interact with the DOM and syncronize values between inputs. 
  */
-function changeRed(value) {
-    document.getElementById('redLabel').innerHTML = value;
-    changeAll();
-}
-function changeGreen(value) {
-    document.getElementById('greenLabel').innerHTML = value;
-    changeAll();
-}
-function changeBlue(value) {
-    document.getElementById('blueLabel').innerHTML = value;
-    changeAll();
-}
 function changeColor(value) {
     var rgb = w3color(value).toRgb();
+    // When the color picker is changed,
+    // convert the hex value to RGB and set the slider values.
     document.getElementById("red1").value = rgb.r;
     document.getElementById("green1").value = rgb.g;
     document.getElementById("blue1").value = rgb.b;
 
-    document.getElementById('redLabel').innerHTML = rgb.r;
-    document.getElementById('greenLabel').innerHTML = rgb.g;
-    document.getElementById('blueLabel').innerHTML = rgb.b;
+    // Also update all labels
     changeAll();
 }
 function changeAll() {
-    var r = document.getElementById('redLabel').innerHTML;
-    var g = document.getElementById('greenLabel').innerHTML;
-    var b = document.getElementById('blueLabel').innerHTML;
+    // Get current R G and B values from the sliders
+    var r = document.getElementById("red1").value;
+    var g = document.getElementById("green1").value;
+    var b = document.getElementById("blue1").value;
+    // Update labels
+    document.getElementById('redLabel').innerHTML = r;
+    document.getElementById('greenLabel').innerHTML = g;
+    document.getElementById('blueLabel').innerHTML = b;
+    // Create a color object using the w3color library
     var colorObj = w3color("rgb(" + r + "," + g + "," + b + ")");
+    // Set color picker value
     document.getElementById('color1').value = colorObj.toHexString();
-    var btn = document.getElementById('submitBtn');
-    btn.style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
-    if (!colorObj.isDark()) {
-        btn.style.color = "var(--bs-gray-dark";
+
+    // Set hex label text
+    var hexColor = colorObj.toHexString();
+    if(hexColor == "#000000"){
+        document.getElementById('colorTxtHex').innerHTML = "OFF";
     } else {
-        btn.style.color = "#fff";
+        document.getElementById('colorTxtHex').innerHTML = colorObj.toHexString();
     }
-    document.getElementById('colorTxt').innerHTML = "rgb(" + r + ", " + g + ", " + b + ")";
-    document.getElementById('colorTxtHex').innerHTML = colorObj.toHexString();
+
+    // Set rgb color text
+    document.getElementById('colorTxt').innerHTML = colorObj.toRgbString();
+
+    // Change color of submit button to match the selected color
+    var btn = document.getElementById('submitBtn');
+    btn.style.backgroundColor = colorObj.toRgbString()
+    if (!colorObj.isDark()) {
+        // Con
+        btn.style.color = "var(--bs-gray-dark)";
+    } else {
+        btn.style.color = "var(--bs-white)";
+    }
+
+    document.getElementById("colorSwatch").style.backgroundColor = colorObj.toRgbString();
+
 }
