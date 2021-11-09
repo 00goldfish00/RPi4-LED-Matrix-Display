@@ -1,3 +1,6 @@
+body {
+    background: #242936;
+}
 .form-control#red1 {
     background-color: var(--bs-red);
 }
@@ -8,6 +11,9 @@
 
 .form-control#blue1 {
     background-color: var(--bs-blue);
+}
+.navbar-dark {
+    background-color: var(--bs-gray-dark);
 }
 
 /* For some reason multiple selecters dont work on these sudo elements? */
