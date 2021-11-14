@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RGB Control</title>
+    <link rel='shortcut icon' type='image/x-icon' href="{{ url_for('static',filename='favicon.png') }}" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+
+
+    <script src="{{ url_for('static', filename='form_send.js') }}"></script>
+    <script src="{{ url_for('static', filename='dynamic_control.js') }}"></script>
+</head>
+
+<body onload="changeAll()">
+    <div class="container-fluid p-0" id="main">
+        <!-- First row is a navbar. These buttons don't do anything right now -->
+        <div class="row g-2">
+            <nav class="navbar navbar-expand-md navbar-light navbar-dark shadow">
+                <form class="container-fluid justify-content-start">
+                    <!-- <script>
+                        // Uncomment for audio playback
+                        const audio = new Audio("{{ url_for('static',filename='audio/Marshmello Alone.wav') }}");
+                        function play(e) {
+                            if (audio.paused) {
+                                audio.play();
+                                e.innerHTML = "Pause";
+                                e.style
+                            } else {
+                                audio.pause();
+                                e.innerHTML = "Play";
+                            }
+                        }
+                    </script>
+                    <button class="btn btn-success me-2" type="button" id="playBtn" onclick="play(this)">Play</button>
+                    <script>
+                        function resetAndStop(e) {
+                            // audio.pause();
+                            // audio.currentTime = 0;
+                            document.getElementById('playBtn').innerHTML = "Play";
+                            document.getElementById('red1').value = "0";
+                            document.getElementById('green1').value = "0";
+                            document.getElementById('blue1').value = "0";
+                            changeAll();
+                        }
+                    </script>
+                    <button class="btn btn-sm btn-secondary" type="button" onclick="resetAndStop(this)">Reset</button> -->
+                </form>
+            </nav>
+        </div>
+        <!-- Second row has main content. split into 3 columns -->
+        <div class="row justify-content-between m-3 g-3">
+            <!-- Left column with alert -->
+            <div class="col-lg-3 pt-2">
+                <div id="alertPlaceholder"></div>
+            </div>
+            <!-- Main Middle column -->
+            <div class="col col-lg-4 d-grid gap-2 mx-md-5">
+                <form id="form1"></form>
+                <div class="form-floating">
+                    <input class="form-control form-control-lg" type="color" name="color" id="color1" form="form1"
+                        title="Choose color" oninput="changeColor(this.value)" onchange="changeColor(this.value)">
+                    <label for="color1" class="form-label">LED Color picker</label>
+                </div>
+                <div class="form-floating">
+                    <select class="form-select" name="pattern" , id="pattern1" form="form1">
+                        {% for item in patterns %}
+                        <option>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="pattern1" class="form-label">Select pattern</label>
+                </div>
+                <div class="form-floating">
+                    <input id="red1" name="red" type="range" class="form-control form-control-lg form-range"
+                        form="form1" min="0" max="255" value="{{ red }}" oninput="changeAll()"
+                        onchange="changeAll()">
+                    <label for="red1" class="form-label h4">Red: <output for="red1" id="redLabel">{{ red
+                            }}</output></label>
+                </div>
+                <div class="form-floating">
+                    <input name="green" type="range" class="form-control form-control-lg form-range" id="green1"
+                        form="form1" min="0" max="255" value="{{ green }}" oninput="changeAll()"
+                        onchange="changeAll()">
+                    <label for="green1" class="form-label h4">Green: <output for="green1" id="greenLabel">{{ green
+                            }}</output></label>
+                </div>
+                <div class="form-floating">
+                    <input name="blue" type="range" class="form-control form-control-lg form-range" id="blue1"
+                        form="form1" min="0" max="255" value="{{ blue }}" oninput="changeBlue(this.value)"
+                        onchange="changeBlue(this.value)">
+                    <label for="blue1" class="form-label h4">Blue: <output for="blue1" id="blueLabel">{{ blue
+                            }}</output></label>
+                </div>
+                <!-- Color Text Area -->
+                <div class="card text-center border border-light text-dark bg-light mb-3">
+                    <div class="card-header" id="colorSwatch" style="height: 2.5em;">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text lead m-1" id="colorTxt"></p>
+                        <p class="card-text lead m-1" id="colorTxtHex"></p>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-secondary btn-lg" form="form1" type="submit" id="submitBtn">Submit</button>
+                </div>
+            </div>
+            <!-- Right Column -->
+            <div class="col-lg-3 pt-2">
+                <!-- <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                         <a href="{{ url_for('about') }}" class="card-link">About us</a> 
+                        <a href="https://github.com/00goldfish00/RPi4-LED-Matrix-Display" class="card-link">Code on
+                            Github </a>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <!-- Include bootstrap related javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <!-- Color format conversion library -->
+    <script src="{{ url_for('static', filename='w3color.js')}}"></script>
+</body>
+
+</html>

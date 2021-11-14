@@ -1,0 +1,15 @@
+flask
+scipy
+numpy
+matplotlib
+math
+board
+neopixel
+random
+time
+http
+cgi
+os
+RPi.GPIO
+threading
+atexit
