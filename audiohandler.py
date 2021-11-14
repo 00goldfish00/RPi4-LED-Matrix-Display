@@ -6,7 +6,7 @@ import math
 
 
 class AudioHandler:
-    '''class to handle fourier transforming audio data samples'''
+    '''A class to handle fourier transforming audio data samples'''
 
     def __init__(self, song_title, display_length:int, columns:int) -> None:
         # read in song waveform data
@@ -34,6 +34,7 @@ class AudioHandler:
     
 
     def fft_at_time(self, second_to_transform):
+        '''Takes the forier transform of one second of song data startin gat the given time.'''
 
         # first data point of sample to transform
         start_point = second_to_transform
@@ -56,8 +57,9 @@ class AudioHandler:
         self.magnitude_list = 2.0/self.samplerate * np.abs(self.yf[:self.samplerate//2])
 
 
-    # plot
     def plot_fft(self, name = 'Fourier Plot'):
+        '''This method to plot the last captured second of song data and its fourier transform'''
+        
         plt.subplot(2, 1, 1)
         plt.plot(self.x, self.y)
         plt.title('Song Data Sample')
@@ -74,10 +76,13 @@ class AudioHandler:
 
 
     def scale_to_volume(self, freq_mag_list:list):
-        '''scales frequency magnitudes to volumes based on the number of LEDs in a column'''
+        '''Scales frequency magnitudes to volumes based on the number of LEDs in a column.'''
         volume_list = list()
+
+        # find the maximum volume in the list of volumes
         max_freq = max(freq_mag_list)
 
+        # scale each volume to fit in the column height set by the display
         for mag in freq_mag_list:
             volume_list.append(int(mag * self.points_per_column // max_freq))
 
@@ -85,8 +90,8 @@ class AudioHandler:
 
 
     def generate_volume_list(self, second_to_transform:int):
-        '''generates a list of frequency volumes for a given second of song data\n
-        assumes 20 columns!'''
+        '''Generates a list of frequency volumes for a given second of song data.\n
+        Currently assumes there are 20 columns.'''
         self.fft_at_time(second_to_transform)
         
         mag_maxes = np.zeros(20, dtype = int)
